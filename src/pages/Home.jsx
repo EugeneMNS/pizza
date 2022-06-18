@@ -10,7 +10,7 @@ import {SearchContext} from "../App";
 
 
 const Home = () => {
-    const [searchValue] = useContext(SearchContext)
+    const {searchValue} = useContext(SearchContext)
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true)
     const [categoryId, setCategoryId] = useState(0)

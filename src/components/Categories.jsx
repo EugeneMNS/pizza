@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 
 export function Categories({value, onChangeCategory}) {
     const categories = ['Все', 'Мясные', 'Вегетариансткая', 'Гриль', 'Острые', 'Закрытые']
