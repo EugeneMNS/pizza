@@ -7,7 +7,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import Cart from "./pages/Cart";
 
-export const SearchContext = createContext('')
+export const SearchContext = createContext('');
 
 function App() {
     const [searchValue, setSearchValue] = useState('')
