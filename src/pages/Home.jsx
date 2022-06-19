@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
+import axios from "axios";
 
 import {Categories} from "../components/Categories";
 import {Sort} from "../components/Sort";
@@ -10,14 +11,9 @@ import {useSelector, useDispatch} from 'react-redux'
 import {setCategoryId} from "../redux/slices/filterSlice";
 
 
-
 const Home = () => {
     const dispatch = useDispatch()
     const {categoryId, sort} = useSelector((state) => state.filter)
-
-
-
-
 
 
     const {searchValue} = useContext(SearchContext)
@@ -26,7 +22,7 @@ const Home = () => {
     const [currentPage, setCurrentPage] = useState(1)
 
 
-    const onChangeCategory =(id)=>{
+    const onChangeCategory = (id) => {
         dispatch(setCategoryId(id))
     }
 
@@ -34,18 +30,18 @@ const Home = () => {
         setIsLoading(true)
 
         const order = sort.sortProperty.includes('-') ? 'asc' : 'desc'
-        const sortBy =sort.sortProperty.replace('-', '')
-        const  category =categoryId > 0 ? `category=${categoryId}` : ''
-        const  search =searchValue ? `&search=${searchValue}` : ''
+        const sortBy = sort.sortProperty.replace('-', '')
+        const category = categoryId > 0 ? `category=${categoryId}` : ''
+        const search = searchValue ? `&search=${searchValue}` : ''
 
-        fetch(
-            `https://62a97197ec36bf40bdb79673.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`)
-            .then((res) => {return res.json()})
-            .then((arr) => {
-                setItems(arr)
+        axios
+            .get(`https://62a97197ec36bf40bdb79673.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
+            )
+            .then((res) => {
+                setItems(res.data)
                 setIsLoading(false)
             })
-        window.scroll(0,0)
+        window.scroll(0, 0)
     }, [categoryId, sort.sortProperty, searchValue, currentPage])
 
     const pizzas = items
@@ -56,13 +52,13 @@ const Home = () => {
         <div className="container">
             <div className="content__top">
                 <Categories value={categoryId} onChangeCategory={onChangeCategory}/>
-                <Sort />
+                <Sort/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             <div className="content__items">
                 {isLoading ? skeletons : pizzas}
             </div>
-            <Pagination currentPage={currentPage} onChangePage={(number)=> setCurrentPage(number)}/>
+            <Pagination currentPage={currentPage} onChangePage={(number) => setCurrentPage(number)}/>
         </div>
     );
 };
