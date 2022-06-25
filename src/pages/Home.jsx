@@ -35,7 +35,7 @@ const Home = () => {
         dispatch(setCurrentPage(number));
     };
 
-    const fetchPizzas = () => {
+    const fetchPizzas = async () => {
         setIsLoading(true)
 
         const order = sort.sortProperty.includes('-') ? 'asc' : 'desc'
@@ -43,13 +43,16 @@ const Home = () => {
         const category = categoryId > 0 ? `category=${categoryId}` : ''
         const search = searchValue ? `&search=${searchValue}` : ''
 
-        axios
-            .get(`https://62a97197ec36bf40bdb79673.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-            )
-            .then((res) => {
-                setItems(res.data)
-                setIsLoading(false)
-            })
+
+        try{
+            const res = await axios.get(`https://62a97197ec36bf40bdb79673.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`)
+            setItems(res.data)
+        } catch (error){
+            console.log('Error: ', error);
+            alert('Ошибка при загрузке данных')
+        } finally{
+            setIsLoading(false)
+        }
     }
     useEffect(() => {
         if (isMounted.current) {
