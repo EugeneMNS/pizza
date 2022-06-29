@@ -8,14 +8,15 @@ import {Sort, sortList} from "../components/Sort";
 import {Skeleton} from "../components/PizzaBlock/Skeleton";
 import {PizzaBlock} from "../components/PizzaBlock/PizzaBlock";
 import Pagination from "../Pagination/Pagination";
-import {useSelector, useDispatch} from 'react-redux'
+import {useSelector} from 'react-redux'
 import {selectFilter, setCategoryId, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
 import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
+import {useAppDispatch} from "../redux/store";
 
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const {categoryId, sort, currentPage, searchValue} = useSelector(selectFilter)
     const isSearch = useRef(false)
     const isMounted = useRef(false)
@@ -38,13 +39,13 @@ const Home: React.FC = () => {
         const search = searchValue ? `&search=${searchValue}` : ''
 
 
-        // @ts-ignore
-        dispatch(fetchPizzas({
+        dispatch(
+            fetchPizzas({
                 order,
                 sortBy,
                 category,
                 search,
-                currentPage,
+                currentPage: String(currentPage),
             })
         )
     }
@@ -56,7 +57,7 @@ const Home: React.FC = () => {
                 currentPage,
             })
 
-            navigate(`?${queryString}`)
+            navigate(`/?${queryString}`)
         }
         isMounted.current = true
     }, [categoryId, sort.sortProperty, searchValue, currentPage])

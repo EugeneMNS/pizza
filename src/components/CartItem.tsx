@@ -19,6 +19,12 @@ const CartItem: React.FC <CartItemProps> = ({id, title, type, size, price, count
     const onClickPlus = () => {
         dispatch(addItem({
             id,
+            title,
+            type,
+            size,
+            price,
+            count,
+            imageUrl,
         }))
     }
 
