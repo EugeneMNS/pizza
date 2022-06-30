@@ -4,13 +4,13 @@ import {Link, useNavigate} from 'react-router-dom';
 
 
 import {Categories} from "../components/Categories";
-import {Sort, sortList} from "../components/Sort";
+import {SortPopup, sortList} from "../components/SortPopup";
 import {Skeleton} from "../components/PizzaBlock/Skeleton";
 import {PizzaBlock} from "../components/PizzaBlock/PizzaBlock";
 import Pagination from "../Pagination/Pagination";
 import {useSelector} from 'react-redux'
-import {selectFilter, setCategoryId, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
-import {fetchPizzas, selectPizzaData} from "../redux/slices/pizzaSlice";
+import {FilterSliceState, selectFilter, setCategoryId, setCurrentPage, setFilters} from "../redux/slices/filterSlice";
+import {fetchPizzas, SearchPizzaParams, selectPizzaData} from "../redux/slices/pizzaSlice";
 import {useAppDispatch} from "../redux/store";
 
 
@@ -64,13 +64,15 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         if (window.location.search) {
-            const params = qs.parse(window.location.search.substring(1))
-            const sort = sortList.find(obj => obj.sortProperty === params.sortProperty)
+            const params = qs.parse(window.location.search.substring(1) as unknown as SearchPizzaParams)
+            const sortObj = sortList.find(obj => obj.sortProperty === params.sortBy)
 
             dispatch(
                 setFilters({
-                    ...params,
-                    sort,
+                    searchValue: params.search,
+                    categoryId: Number(params.category),
+                    currentPage: Number(params.currentPage),
+                    sort: sortObj || sortList[0],
                 })
             )
             isSearch.current = true
@@ -99,7 +101,7 @@ const Home: React.FC = () => {
         <div className="container">
             <div className="content__top">
                 <Categories value={categoryId} onChangeCategory={onChangeCategory}/>
-                <Sort/>
+                <SortPopup/>
             </div>
             <h2 className="content__title">Все пиццы</h2>
             {status === 'error' ? (
