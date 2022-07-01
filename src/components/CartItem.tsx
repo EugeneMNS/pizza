@@ -37,7 +37,7 @@ export const CartItem: React.FC<CartItemProps> = ({
   };
 
   const onClickRemove = () => {
-    if (window.confirm('Ты действительно хочешь удалить товар?')) {
+    if (window.confirm('Вы действительно хотите удалить товар?')) {
       dispatch(removeItem(id));
     }
   };
